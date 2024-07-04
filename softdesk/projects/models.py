@@ -56,11 +56,6 @@ class Issue(models.Model):
         on_delete=models.CASCADE,
         related_name='project_issue',
     )
-    contributors = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name='issue_contributors',
-        blank=True
-    )
     description = models.TextField(max_length=2048)
     priority = models.CharField(choices=Priority.choices, max_length=6)
     type = models.CharField(choices=Type.choices, max_length=7)

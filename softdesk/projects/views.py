@@ -3,28 +3,32 @@ from rest_framework.viewsets import ModelViewSet
 
 from projects.models import Project, Issue, Comment
 from projects.serializers import ProjectsSerializer, IssuesSerializer, CommentsSerializer
+from softdesk.permissions import IsAuthor, IsAuthorized
 
 
 class ProjectsViewset(ModelViewSet):
+    queryset = Project.objects.all()
     serializer_class = ProjectsSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAuthor]
 
-    def get_queryset(self):
-        user = self.request.user
-        print(f"Current user: {user}")
-        print(f"Request headers: {self.request.headers}")
-        return Project.objects.all()
+    def perform_create(self, serializer):
+        project = serializer.save(author=self.request.user)
+        project.contributors.add(self.request.user)
 
 
 class IssuesViewset(ModelViewSet):
+    queryset = Issue.objects.all()
     serializer_class = IssuesSerializer
+    permission_classes = [IsAuthorized]
 
-    def get_queryset(self):
-        return Issue.objects.all()
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 
 class CommentsViewset(ModelViewSet):
+    queryset = Comment.objects.all()
     serializer_class = CommentsSerializer
+    permission_classes = [IsAuthorized]
 
-    def get_queryset(self):
-        return Comment.objects.all()
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
