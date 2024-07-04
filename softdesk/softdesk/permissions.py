@@ -27,16 +27,14 @@ class IsAuthor(permissions.BasePermission):
         return obj.author == request.user
 
 
-class IsAuthorized(permissions.BasePermission):
-
+class IsAuthorOrContributor(permissions.BasePermission):
     def has_permission(self, request, view):
-        project_id = request.data.get('project')
-        if not project_id:
-            return False
-
-        try:
+        project_id = view.kwargs.get('project_id')
+        if project_id:
             project = Project.objects.get(id=project_id)
-        except Project.DoesNotExist:
-            return False
+            return (
+                    request.user == project.author or
+                    request.user in project.contributors.all()
+            )
 
-        return request.user == project.author or request.user in project.contributors.all()
+        return False

@@ -1,14 +1,12 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from projects.models import Project, Issue, Comment
-from users.models import User
 from users.serializers import UsersSerializer
 
 
 class ProjectsSerializer(ModelSerializer):
     author = UsersSerializer(read_only=True)
-    contributors = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=True)
+    contributors = UsersSerializer(many=True, read_only=True)
 
     class Meta:
         model = Project
@@ -25,6 +23,7 @@ class ProjectsSerializer(ModelSerializer):
 
 class IssuesSerializer(ModelSerializer):
     author = UsersSerializer(read_only=True)
+    project = ProjectsSerializer(read_only=True)
 
     class Meta:
         model = Issue
@@ -37,11 +36,16 @@ class IssuesSerializer(ModelSerializer):
             'priority',
             'type',
             'status',
+            'created_time'
         ]
+        extra_kwargs = {
+            'project': {'required': False}
+        }
 
 
 class CommentsSerializer(ModelSerializer):
     author = UsersSerializer(read_only=True)
+    issue = IssuesSerializer(read_only=True)
 
     class Meta:
         model = Comment
@@ -50,4 +54,8 @@ class CommentsSerializer(ModelSerializer):
             'author',
             'issue',
             'description',
+            'created_time'
         ]
+        extra_kwargs = {
+            'issue': {'required': False}
+        }

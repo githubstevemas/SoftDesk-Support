@@ -1,3 +1,4 @@
+from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 
 from softdesk.permissions import IsSuperUser, IsSelf
@@ -11,8 +12,14 @@ class UserViewSet(ModelViewSet):
     permission_classes = [IsSuperUser]
 
     def get_permissions(self):
+        if self.action == 'create':
+            return [permissions.AllowAny()]
         if self.action == 'list':
             self.permission_classes = [IsSuperUser]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+        elif self.action in ['retrieve',
+                             'update',
+                             'partial_update',
+                             'destroy'
+                             ]:
             self.permission_classes = [IsSelf]
         return super(UserViewSet, self).get_permissions()

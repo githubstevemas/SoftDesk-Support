@@ -2,7 +2,7 @@ from datetime import date
 
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import User
+from .models import User, Contributor
 
 
 class UsersSerializer(ModelSerializer):
@@ -20,9 +20,11 @@ class UsersSerializer(ModelSerializer):
 
     def validate_birthdate(self, value):
         today = date.today()
-        age = today.year - value.year - ((today.month, today.day) < (value.month, value.day))
+        age = today.year - value.year - (
+                    (today.month, today.day) < (value.month, value.day))
         if age < 15:
-            raise serializers.ValidationError("User must be at least 15 years old.")
+            raise serializers.ValidationError(
+                "User must be at least 15 years old.")
         return value
 
     def create(self, validated_data):
@@ -36,3 +38,12 @@ class UsersSerializer(ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class ContributorsSerializer(ModelSerializer):
+    class Meta:
+        model = Contributor
+        fields = [
+            'user',
+            'project'
+        ]

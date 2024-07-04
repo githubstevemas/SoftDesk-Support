@@ -60,6 +60,7 @@ class Issue(models.Model):
     priority = models.CharField(choices=Priority.choices, max_length=6)
     type = models.CharField(choices=Type.choices, max_length=7)
     status = models.CharField(choices=Status.choices, max_length=11)
+    created_time = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
@@ -80,3 +81,4 @@ class Comment(models.Model):
     )
     # issue_link = ???
     description = models.TextField(max_length=2048)
+    created_time = models.DateTimeField(auto_now_add=True)
