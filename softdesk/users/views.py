@@ -15,6 +15,11 @@ class UserViewSet(ModelViewSet):
             return [permissions.AllowAny()]
         elif self.action == 'list':
             return [IsSuperUser()]
-        elif self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+        elif self.action in [
+            'retrieve',
+            'update',
+            'partial_update',
+            'destroy'
+        ]:
             return [IsSelf()]
         return super(UserViewSet, self).get_permissions()

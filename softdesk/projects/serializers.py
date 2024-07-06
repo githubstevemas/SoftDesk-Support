@@ -2,7 +2,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import ModelSerializer
 
 from projects.models import Project, Issue, Comment
-from users.serializers import UsersSerializer
+# from users.serializers import UsersSerializer
 
 
 class ProjectsSerializer(ModelSerializer):
@@ -51,7 +51,8 @@ class IssueUpdateAuthorSerializer(ModelSerializer):
         request = self.context.get('request')
         if request:
             project = self.instance.project
-            if value != project.author and value not in project.contributors.all():
+            if (value != project.author
+                    and value not in project.contributors.all()):
                 raise ValidationError(
                     "Must be the project author or a project contributor."
                 )
