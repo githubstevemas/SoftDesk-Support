@@ -79,6 +79,5 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='issue_comment',
     )
-    # issue_link = ???
     description = models.TextField(max_length=2048)
     created_time = models.DateTimeField(auto_now_add=True)

@@ -5,7 +5,7 @@ from projects.models import Project, Issue, Comment
 from projects.serializers import (
     ProjectsSerializer,
     IssuesSerializer,
-    CommentsSerializer
+    CommentsSerializer, IssueUpdateAuthorSerializer
 )
 from softdesk.permissions import IsAuthor, IsAuthorOrContributor
 
@@ -29,7 +29,11 @@ class ProjectsViewset(ModelViewSet):
 
 
 class IssuesViewset(ModelViewSet):
-    serializer_class = IssuesSerializer
+    def get_serializer_class(self):
+        if self.action in ['update',
+                           'partial_update'] and 'author' in self.request.data:
+            return IssueUpdateAuthorSerializer
+        return IssuesSerializer
 
     def get_queryset(self):
         project_id = self.kwargs.get('project_id')
@@ -38,9 +42,8 @@ class IssuesViewset(ModelViewSet):
     def get_permissions(self):
         if self.action in ['create', 'list']:
             self.permission_classes = [IsAuthorOrContributor]
-        elif self.action in [
-            'retrieve', 'update', 'partial_update', 'destroy'
-        ]:
+        elif self.action in ['retrieve', 'update', 'partial_update',
+                             'destroy']:
             self.permission_classes = [IsAuthor]
         return super(IssuesViewset, self).get_permissions()
 
@@ -55,7 +58,11 @@ class CommentsViewset(ModelViewSet):
 
     def get_queryset(self):
         issue_id = self.kwargs.get('issue_id')
-        return Comment.objects.filter(issue_id=issue_id)
+        project_id = self.kwargs.get('project_id')
+        return Comment.objects.filter(
+            issue_id=issue_id,
+            issue__project_id=project_id
+        )
 
     def get_permissions(self):
         if self.action in ['create', 'list']:
