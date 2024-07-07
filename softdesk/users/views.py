@@ -7,10 +7,18 @@ from .models import User
 
 
 class UserViewSet(ModelViewSet):
+
+    # Define queryset to get all Users objects and specify the serializer
     queryset = User.objects.all()
     serializer_class = UsersSerializer
 
     def get_permissions(self):
+        """
+        Allow any user to create
+        Only superuser can list users
+        Only users themselves can update and destroy their account
+        """
+
         if self.action == 'create':
             return [permissions.AllowAny()]
         elif self.action == 'list':

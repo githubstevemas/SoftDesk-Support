@@ -19,6 +19,8 @@ class UsersSerializer(ModelSerializer):
         ]
 
     def validate_birthdate(self, value):
+        # check if user is over 15
+
         today = date.today()
         age = today.year - value.year - (
                     (today.month, today.day) < (value.month, value.day))
