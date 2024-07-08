@@ -8,6 +8,14 @@ SoftDesk Support is designed to help businesses manage and track technical issue
 - **Data Protection :** Complies with GDPR regulations to ensure user data protection and privacy.
 - **Green Code Practices :** Implements optimized and simplified code to promote energy efficiency and reduce server overconsumption.
 
+## Technologies used
+
+- **[Django](https://www.djangoproject.com/)**: The main web framework used to build the backend of the application.
+- **[Django REST Framework](https://www.django-rest-framework.org/)**: A powerful and flexible toolkit for building Web APIs.
+- **[Pipenv](https://pipenv.pypa.io/en/latest/)**: Used for managing Python packages and virtual environments.
+- **[SQLite](https://www.sqlite.org/)**: The database used for development purposes.
+- **[JWT (JSON Web Token)](https://jwt.io/)**: Used for handling authentication.
+
 ## How to run
 Once the code has been downloaded, go to the project directory and enter the following commands in terminal
 
