@@ -40,6 +40,7 @@ class IsAuthorOrContributor(permissions.BasePermission):
             )
         return False
 
+
 class IsNotAuthenticated(permissions.BasePermission):
 
     def has_permission(self, request, view):
