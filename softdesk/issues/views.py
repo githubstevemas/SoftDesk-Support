@@ -17,10 +17,8 @@ class IssuesViewset(ModelViewSet):
         return IssuesSerializer
 
     def get_queryset(self):
-
-        # Get issues for project_id
         project_id = self.kwargs.get('project_id')
-        return Issue.objects.filter(project_id=project_id)
+        return Issue.objects.filter(project_id=project_id).order_by('id')
 
     def get_permissions(self):
         """
@@ -42,4 +40,3 @@ class IssuesViewset(ModelViewSet):
         project_id = self.kwargs.get('project_id')
         project = Project.objects.get(id=project_id)
         serializer.save(author=self.request.user, project=project)
-

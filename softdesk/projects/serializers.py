@@ -19,4 +19,7 @@ class ProjectsSerializer(ModelSerializer):
             'type',
             'created_time'
         ]
-
+        extra_kwargs = {
+            'author': {'required': False}
+        }
+        read_only_fields = ['author', 'project']

@@ -1,15 +1,14 @@
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 
-from softdesk.permissions import IsSuperUser, IsSelf
+from softdesk.permissions import IsSuperUser, IsSelf, IsNotAuthenticated
 from users.serializers import UsersSerializer
 from .models import User
 
 
 class UserViewSet(ModelViewSet):
-
     # Define queryset to get all Users objects and specify the serializer
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('id')
     serializer_class = UsersSerializer
 
     def get_permissions(self):
@@ -20,11 +19,12 @@ class UserViewSet(ModelViewSet):
         """
 
         if self.action == 'create':
-            return [permissions.AllowAny()]
+            return [IsNotAuthenticated()]
         elif self.action == 'list':
             return [IsSuperUser()]
+        elif self.action == 'retrieve':
+            return [IsSuperUser()]
         elif self.action in [
-            'retrieve',
             'update',
             'partial_update',
             'destroy'
